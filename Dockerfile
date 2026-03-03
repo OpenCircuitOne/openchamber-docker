@@ -120,7 +120,9 @@ RUN curl -fSL "https://github.com/cloudflare/cloudflared/releases/latest/downloa
 ENV NODE_ENV=production
 
 # Create openchamber user (UID/GID 1000)
-RUN useradd -m -u 1000 -U -s /bin/bash openchamber
+RUN useradd -m -u 1000 -U -s /bin/bash openchamber && \
+    mkdir -p /home/openchamber/go && \
+    chown openchamber:openchamber /home/openchamber/go
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Switch to openchamber user — everything below runs as non-root
