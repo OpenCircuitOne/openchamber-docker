@@ -1,6 +1,6 @@
 services:
   openchamber:
-    image: ghcr.io/mcmelontv/openchamber-docker:latest
+    image: ghcr.io/opencircuitone/openchamber-docker:latest
     container_name: openchamber
     ports:
       - "5000:5000"
