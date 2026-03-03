@@ -162,6 +162,7 @@ RUN --mount=type=cache,target=/home/openchamber/.npm,uid=1000,gid=1000 \
 RUN --mount=type=cache,target=/home/openchamber/go/pkg/mod,uid=1000,gid=1000 \
     --mount=type=cache,target=/home/openchamber/go/pkg/sumdb,uid=1000,gid=1000 \
     --mount=type=cache,target=/home/openchamber/.cache/go-build,uid=1000,gid=1000 \
+    mkdir -p /home/openchamber/go/bin && \
     go install golang.org/x/tools/gopls@latest
 
 # ──────────────────────────────────────────────────────────────────────────────
