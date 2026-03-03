@@ -54,9 +54,6 @@ if [ -n "${CF_TUNNEL:-}" ] && [ "${CF_TUNNEL:-false}" != "false" ]; then
   "qr")
     OPENCHAMBER_ARGS="${OPENCHAMBER_ARGS} --tunnel-qr"
     ;;
-  esac
-
-  case "${CF_TUNNEL}" in
   "password")
     OPENCHAMBER_ARGS="${OPENCHAMBER_ARGS} --tunnel-password-url"
     ;;
