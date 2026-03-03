@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Node.js (from official nodesource — gives us latest LTS)
-# ───────────────────────────────────────��──────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
   apt-get install -y --no-install-recommends nodejs && \
   rm -rf /var/lib/apt/lists/*
@@ -125,7 +125,7 @@ RUN go install golang.org/x/tools/gopls@latest
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Kotlin Language Server (build from source)
-# ─────────────────────────���────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 RUN git clone --depth 1 https://github.com/fwcd/kotlin-language-server.git /home/openchamber/kotlin-ls && \
   cd /home/openchamber/kotlin-ls && \
   ./gradlew :server:installDist && \
