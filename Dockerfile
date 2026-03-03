@@ -119,8 +119,14 @@ RUN curl -fSL "https://github.com/cloudflare/cloudflared/releases/latest/downloa
 
 ENV NODE_ENV=production
 
-# Create openchamber user (UID/GID 1000)
-RUN useradd -m -u 1000 -U -s /bin/bash openchamber
+# Create openchamber user (UID/GID 1000) and pre-create the Go directory tree
+# with correct ownership. Docker BuildKit creates cache-mount target parent
+# directories as root before the RUN shell executes, which would leave
+# /home/openchamber/go owned by root and cause the non-root user's subsequent
+# mkdir /home/openchamber/go/bin to fail with "Permission denied".
+RUN useradd -m -u 1000 -U -s /bin/bash openchamber && \
+    mkdir -p /home/openchamber/go/bin && \
+    chown -R openchamber:openchamber /home/openchamber/go
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Switch to openchamber user — everything below runs as non-root
@@ -162,7 +168,6 @@ RUN --mount=type=cache,target=/home/openchamber/.npm,uid=1000,gid=1000 \
 RUN --mount=type=cache,target=/home/openchamber/go/pkg/mod,uid=1000,gid=1000 \
     --mount=type=cache,target=/home/openchamber/go/pkg/sumdb,uid=1000,gid=1000 \
     --mount=type=cache,target=/home/openchamber/.cache/go-build,uid=1000,gid=1000 \
-    mkdir -p /home/openchamber/go/bin && \
     go install golang.org/x/tools/gopls@latest
 
 # ──────────────────────────────────────────────────────────────────────────────
