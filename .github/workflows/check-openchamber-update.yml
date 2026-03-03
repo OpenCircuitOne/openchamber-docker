@@ -1,0 +1,49 @@
+name: Check for OpenChamber Update
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Daily at 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest @openchamber/web version from npm
+        id: latest
+        run: |
+          VERSION=$(curl -fsSL https://registry.npmjs.org/@openchamber/web | jq -r '."dist-tags".latest')
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "::error::Failed to fetch latest @openchamber/web version from npm"
+            exit 1
+          fi
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Unexpected version format: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Get currently tracked version
+        id: current
+        run: |
+          if [ -f .openchamber-version ]; then
+            echo "version=$(cat .openchamber-version)" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit version bump and trigger rebuild
+        if: steps.latest.outputs.version != steps.current.outputs.version
+        run: |
+          echo "${{ steps.latest.outputs.version }}" > .openchamber-version
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .openchamber-version
+          git commit -m "chore: update openchamber to v${{ steps.latest.outputs.version }}"
+          git push || { echo "::error::git push failed — check branch protection rules and workflow permissions"; exit 1; }
