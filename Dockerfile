@@ -5,6 +5,8 @@
 # ──────────────────────────────────────────────────────────────────────────────
 FROM debian:bookworm-slim AS runtime
 
+ARG TARGETARCH
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -35,7 +37,7 @@ RUN curl -fsSL https://bun.sh/install | bash && \
 # Go (official tarball)
 # ──────────────────────────────────────────────────────────────────────────────
 RUN GO_VERSION=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1) && \
-  curl -fSL "https://go.dev/dl/${GO_VERSION}.linux-amd64.tar.gz" -o /tmp/go.tar.gz && \
+  curl -fSL "https://go.dev/dl/${GO_VERSION}.linux-${TARGETARCH}.tar.gz" -o /tmp/go.tar.gz && \
   tar -C /usr/local -xzf /tmp/go.tar.gz && \
   rm /tmp/go.tar.gz
 ENV PATH=/usr/local/go/bin:${PATH}
@@ -55,7 +57,7 @@ RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | \
     temurin-21-jdk \
     temurin-25-jdk \
   && rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-${TARGETARCH}
 ENV PATH=${JAVA_HOME}/bin:${PATH}
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -73,7 +75,7 @@ RUN KOTLIN_TAG=$(curl -fsSL https://api.github.com/repos/JetBrains/kotlin/releas
 # ──────────────────────────────────────────────────────────────────────────────
 # Cloudflared
 # ──────────────────────────────────────────────────────────────────────────────
-RUN curl -fSL "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb" \
+RUN curl -fSL "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-${TARGETARCH}.deb" \
     -o /tmp/cloudflared.deb && \
   dpkg -i /tmp/cloudflared.deb && \
   rm /tmp/cloudflared.deb
