@@ -10,13 +10,22 @@ ghcr.io/opencircuitone/openchamber-docker:latest
 
 ## Quick Start
 
-Run this one-liner — it creates an `openchamber/` directory, downloads the compose file, sets up data directories, and starts the container:
+Run this one-liner — it walks you through an interactive setup, generates `docker-compose.yml` from your answers, and starts the container:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/OpenCircuitOne/openchamber-docker/main/setup.sh | bash
 ```
 
-Then open http://localhost:5000.
+The script will ask for:
+- **Install directory** (default: `openchamber`)
+- **Host port** (default: `5000`)
+- **UI password** (`UI_PASSWORD`)
+- **Cloudflare Tunnel** mode (`CF_TUNNEL`: `false` / `true` / `qr` / `password`)
+- **oh-my-opencode** toggle (`OH_MY_OPENCODE`, default enabled)
+- **External OpenCode host** (`OPENCODE_HOST`, optional)
+- **Skip auto-starting OpenCode** (`OPENCODE_SKIP_START`)
+
+Then open http://localhost:5000 (or the port you chose).
 
 ## Manual Setup
 

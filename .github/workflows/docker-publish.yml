@@ -6,6 +6,19 @@ on:
       - main
     tags:
       - "v*"
+    paths-ignore:
+      - "README.md"
+      - "setup.sh"
+      - "data/**"
+      - "workspaces/**"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+      - "setup.sh"
+      - "data/**"
+      - "workspaces/**"
   workflow_dispatch:
 
 env:
