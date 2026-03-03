@@ -21,7 +21,9 @@ RUN curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | \
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get install -y --no-install-recommends temurin-21-jdk
+    apt-get update && apt-get install -y --no-install-recommends \
+      temurin-11-jdk \
+      temurin-21-jdk
 
 ENV JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-${TARGETARCH}
 ENV PATH=${JAVA_HOME}/bin:${PATH}
