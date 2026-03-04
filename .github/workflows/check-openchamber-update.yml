@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write  # needed to trigger workflow_dispatch
 
     steps:
       - name: Checkout repository
@@ -38,7 +39,7 @@ jobs:
             echo "version=" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Commit version bump and trigger rebuild
+      - name: Commit version bump
         if: steps.latest.outputs.version != steps.current.outputs.version
         run: |
           echo "${{ steps.latest.outputs.version }}" > .openchamber-version
@@ -47,3 +48,10 @@ jobs:
           git add .openchamber-version
           git commit -m "chore: update openchamber to v${{ steps.latest.outputs.version }}"
           git push || { echo "::error::git push failed — check branch protection rules and workflow permissions"; exit 1; }
+
+      - name: Trigger Docker rebuild
+        if: steps.latest.outputs.version != steps.current.outputs.version
+        run: |
+          gh workflow run docker-publish.yml --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
