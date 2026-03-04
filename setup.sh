@@ -182,7 +182,7 @@ COMPOSE_EOF
 
 if [ -n "$ENV_BLOCK" ]; then
   printf "    environment:\n" >> docker-compose.yml
-  printf "%s" "${ENV_BLOCK}" >> docker-compose.yml
+  printf "%b" "${ENV_BLOCK}" >> docker-compose.yml
 fi
 
 printf "    restart: unless-stopped\n" >> docker-compose.yml
