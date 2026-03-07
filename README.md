@@ -45,7 +45,7 @@ docker compose up -d
 |---|---|
 | `UI_PASSWORD` | Set a password for the UI |
 | `CF_TUNNEL` | Enable Cloudflare Tunnel (`true` / `qr` / `password`) |
-| `OH_MY_OPENCODE` | Enable oh-my-opencode integration (`true`) |
+| `OH_MY_OPENCODE` | Enable oh-my-opencode integration (`true` for full, `slim` for oh-my-opencode-slim) |
 | `OPENCODE_HOST` | Connect to an external OpenCode server (e.g. `http://172.17.0.1:4096`) |
 | `OPENCODE_SKIP_START` | Skip auto-starting OpenCode (`true`) |
 

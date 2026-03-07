@@ -60,17 +60,25 @@ if [ -n "${CF_TUNNEL:-}" ] && [ "${CF_TUNNEL:-false}" != "false" ]; then
   esac
 fi
 
-if [ "${OH_MY_OPENCODE:-false}" = "true" ]; then
+if [ "${OH_MY_OPENCODE:-false}" = "true" ] || [ "${OH_MY_OPENCODE:-false}" = "slim" ]; then
+  if [ "${OH_MY_OPENCODE}" = "slim" ]; then
+    OMO_PACKAGE="oh-my-opencode-slim"
+    OMO_CMD="oh-my-opencode-slim"
+  else
+    OMO_PACKAGE="oh-my-opencode"
+    OMO_CMD="oh-my-opencode"
+  fi
+
   OMO_CONFIG_FILE="${OPENCODE_CONFIG_DIR}/oh-my-opencode.json"
 
   if [ ! -f "${OMO_CONFIG_FILE}" ]; then
-    echo "[entrypoint] npm installing oh-my-opencode..."
-    npm install -g oh-my-opencode
+    echo "[entrypoint] npm installing ${OMO_PACKAGE}..."
+    npm install -g "${OMO_PACKAGE}"
 
     OMO_INSTALL_ARGS="--no-tui --claude=no --openai=no --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no --kimi-for-coding=no --skip-auth"
 
-    echo "[entrypoint] oh-my-opencode installing..."
-    oh-my-opencode install ${OMO_INSTALL_ARGS}
+    echo "[entrypoint] ${OMO_CMD} installing..."
+    "${OMO_CMD}" install ${OMO_INSTALL_ARGS}
   fi
 fi
 
