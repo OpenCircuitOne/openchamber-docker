@@ -75,7 +75,11 @@ if [ "${OH_MY_OPENCODE:-false}" = "true" ] || [ "${OH_MY_OPENCODE:-false}" = "sl
     echo "[entrypoint] npm installing ${OMO_PACKAGE}..."
     npm install -g "${OMO_PACKAGE}"
 
-    OMO_INSTALL_ARGS="--no-tui --claude=no --openai=no --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no --kimi=no --skip-auth"
+    if [ "${OH_MY_OPENCODE}" = "slim" ]; then
+      OMO_INSTALL_ARGS="--no-tui --kimi=no --openai=no --anthropic=no --copilot=no --zai-plan=no --antigravity=no --chutes=no --tmux=no"
+    else
+      OMO_INSTALL_ARGS="--no-tui --claude=no --openai=no --gemini=no --copilot=no --opencode-zen=no --zai-coding-plan=no --kimi-for-coding=no --skip-auth"
+    fi
 
     echo "[entrypoint] ${OMO_CMD} installing..."
     "${OMO_CMD}" install ${OMO_INSTALL_ARGS}
