@@ -103,6 +103,13 @@ OPENCODE_HOST=$(ask_tty "External OpenCode server URL (leave blank to use built-
 OPENCODE_SKIP_START=$(ask_bool "Skip auto-starting OpenCode" "false")
 
 # ──────────────────────────────────────────────────────────────────────────────
+# 8. Auto-upgrade
+# ──────────────────────────────────────────────────────────────────────────────
+echo "" >/dev/tty
+echo "── Auto-upgrade ─────────────────────────────────────────" >/dev/tty
+AUTO_UPGRADE=$(ask_bool "Auto-upgrade openchamber+opencode on container start" "true")
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────────────────────────────────────
 echo ""
@@ -114,6 +121,7 @@ echo "  CF_TUNNEL         : ${CF_TUNNEL}"
 echo "  OH_MY_OPENCODE    : ${OH_MY_OPENCODE}"
 echo "  OPENCODE_HOST     : ${OPENCODE_HOST:-(built-in)}"
 echo "  OPENCODE_SKIP_START: ${OPENCODE_SKIP_START}"
+echo "  AUTO_UPGRADE      : ${AUTO_UPGRADE}"
 echo ""
 
 CONFIRM=$(ask_bool "Proceed with this configuration?" "true")
@@ -168,6 +176,10 @@ fi
 
 if [ "$OPENCODE_SKIP_START" = "true" ]; then
   ENV_BLOCK="${ENV_BLOCK}      OPENCODE_SKIP_START: \"true\"\n"
+fi
+
+if [ "$AUTO_UPGRADE" = "false" ]; then
+  ENV_BLOCK="${ENV_BLOCK}      AUTO_UPGRADE: \"false\"\n"
 fi
 
 cat > docker-compose.yml <<COMPOSE_EOF
