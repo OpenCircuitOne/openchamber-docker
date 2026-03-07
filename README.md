@@ -86,6 +86,23 @@ docker compose pull && docker compose up -d
 > This means a simple `docker compose restart` is all you need to get the newest release.
 > Set `AUTO_UPGRADE=false` in your `docker-compose.yml` environment to opt out.
 
+## Updating an Existing Installation
+
+Run this one-liner from inside your existing openchamber directory to update everything
+(Docker image, `docker-compose.yml` format, data directories) to the latest:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/OpenCircuitOne/openchamber-docker/main/update.sh | bash
+```
+
+The script will:
+1. Detect your current configuration (port, password, feature flags) and use it as defaults
+2. Optionally let you reconfigure any settings interactively
+3. Pull the latest Docker image
+4. Regenerate `docker-compose.yml` with the current format (picks up any new options added to the repo)
+5. Ensure data directories exist with correct ownership
+6. Restart the container
+
 ## Building Locally
 
 ```bash
