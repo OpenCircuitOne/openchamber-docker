@@ -65,8 +65,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Bun (official install script)
 # ──────────────────────────────────────────────────────────────────────────────
 RUN curl -fsSL https://bun.sh/install | bash && \
-    ln -sf /root/.bun/bin/bun /usr/local/bin/bun && \
-    ln -sf /root/.bun/bin/bun /usr/local/bin/bunx
+    cp /root/.bun/bin/bun /usr/local/bin/bun && \
+    chmod 755 /usr/local/bin/bun && \
+    ln -sf /usr/local/bin/bun /usr/local/bin/bunx
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Go (official tarball)
