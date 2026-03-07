@@ -16,7 +16,7 @@ services:
     environment:
     #  UI_PASSWORD: P4$$WORD-go3s_h3r3       # Uncomment to set UI password
     #  CF_TUNNEL: "true"                       # Enable Cloudflare Tunnel (true/qr/password)
-      OH_MY_OPENCODE: "true"                  # Enable oh-my-opencode
+      OH_MY_OPENCODE: "true"                  # Enable oh-my-opencode (true/slim)
     #  OPENCODE_HOST: http://172.17.0.1:4096   # Connect to external OpenCode server
     #  OPENCODE_SKIP_START: "true"             # Skip starting opencode
     restart: unless-stopped

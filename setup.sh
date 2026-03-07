@@ -82,7 +82,15 @@ CF_TUNNEL=$(ask_tty "CF_TUNNEL" "false")
 # ──────────────────────────────────────────────────────────────────────────────
 echo "" >/dev/tty
 echo "── OpenCode settings ────────────────────────────────────" >/dev/tty
-OH_MY_OPENCODE=$(ask_bool "Enable oh-my-opencode" "true")
+echo "  Options: false (disabled) | true (full) | slim" >/dev/tty
+OH_MY_OPENCODE=$(ask_tty "OH_MY_OPENCODE variant" "true")
+case "$OH_MY_OPENCODE" in
+  true|false|slim) ;;
+  *)
+    echo "Error: OH_MY_OPENCODE must be 'true', 'false', or 'slim'." >&2
+    exit 1
+    ;;
+esac
 
 # ──────────────────────────────────────────────────────────────────────────────
 # 6. External OpenCode host
@@ -150,8 +158,8 @@ if [ "$CF_TUNNEL" != "false" ] && [ -n "$CF_TUNNEL" ]; then
   ENV_BLOCK="${ENV_BLOCK}      CF_TUNNEL: \"${CF_TUNNEL}\"\n"
 fi
 
-if [ "$OH_MY_OPENCODE" = "true" ]; then
-  ENV_BLOCK="${ENV_BLOCK}      OH_MY_OPENCODE: \"true\"\n"
+if [ "$OH_MY_OPENCODE" = "true" ] || [ "$OH_MY_OPENCODE" = "slim" ]; then
+  ENV_BLOCK="${ENV_BLOCK}      OH_MY_OPENCODE: \"${OH_MY_OPENCODE}\"\n"
 fi
 
 if [ -n "$OPENCODE_HOST" ]; then
