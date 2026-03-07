@@ -48,6 +48,7 @@ docker compose up -d
 | `OH_MY_OPENCODE` | Enable oh-my-opencode integration (`true` for full, `slim` for oh-my-opencode-slim) |
 | `OPENCODE_HOST` | Connect to an external OpenCode server (e.g. `http://172.17.0.1:4096`) |
 | `OPENCODE_SKIP_START` | Skip auto-starting OpenCode (`true`) |
+| `AUTO_UPGRADE` | Auto-upgrade `@openchamber/web` and `opencode-ai` to latest on every container start (default: `true`; set to `false` to disable, e.g. in air-gapped environments) |
 
 ## Volumes
 
@@ -71,9 +72,36 @@ docker compose logs -f
 # Stop
 docker compose down
 
-# Update to latest image
+# Restart (automatically upgrades openchamber and opencode to latest on startup)
+docker compose restart
+
+# Update to latest image (also pulls any new base image changes)
 docker compose pull && docker compose up -d
 ```
+
+> **Auto-upgrade**: By default, every time the container starts (`docker compose up`,
+> `docker compose restart`, etc.) it checks whether `@openchamber/web` and `opencode-ai`
+> were last upgraded more than 24 hours ago and, if so, runs
+> `npm install -g @openchamber/web opencode-ai` to fetch the latest versions from npm.
+> This means a simple `docker compose restart` is all you need to get the newest release.
+> Set `AUTO_UPGRADE=false` in your `docker-compose.yml` environment to opt out.
+
+## Updating an Existing Installation
+
+Run this one-liner from inside your existing openchamber directory to update everything
+(Docker image, `docker-compose.yml` format, data directories) to the latest:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/OpenCircuitOne/openchamber-docker/main/update.sh | bash
+```
+
+The script will:
+1. Detect your current configuration (port, password, feature flags) and use it as defaults
+2. Optionally let you reconfigure any settings interactively
+3. Pull the latest Docker image
+4. Regenerate `docker-compose.yml` with the current format (picks up any new options added to the repo)
+5. Ensure data directories exist with correct ownership
+6. Restart the container
 
 ## Building Locally
 

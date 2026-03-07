@@ -19,4 +19,5 @@ services:
       OH_MY_OPENCODE: "true"                  # Enable oh-my-opencode (true/slim)
     #  OPENCODE_HOST: http://172.17.0.1:4096   # Connect to external OpenCode server
     #  OPENCODE_SKIP_START: "true"             # Skip starting opencode
+    #  AUTO_UPGRADE: "false"                   # Set to false to skip auto-upgrading openchamber+opencode on startup
     restart: unless-stopped
