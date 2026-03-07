@@ -82,6 +82,34 @@ if [ "${OH_MY_OPENCODE:-false}" = "true" ] || [ "${OH_MY_OPENCODE:-false}" = "sl
   fi
 fi
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Auto-upgrade @openchamber/web and opencode-ai to latest from npm
+# Runs at most once per day to keep startup fast on rapid restarts.
+# Set AUTO_UPGRADE=false to skip entirely (e.g. in air-gapped environments).
+# ──────────────────────────────────────────────────────────────────────────────
+if [ "${AUTO_UPGRADE:-true}" != "false" ]; then
+  UPGRADE_STAMP="${HOME}/.npm-global/.auto-upgrade-timestamp"
+  UPGRADE_INTERVAL=86400  # 24 hours in seconds
+
+  _needs_upgrade() {
+    [ ! -f "${UPGRADE_STAMP}" ] && return 0
+    last=$(cat "${UPGRADE_STAMP}" 2>/dev/null || echo 0)
+    now=$(date +%s)
+    [ $(( now - last )) -ge ${UPGRADE_INTERVAL} ]
+  }
+
+  if _needs_upgrade; then
+    echo "[entrypoint] auto-upgrading @openchamber/web and opencode-ai to latest..."
+    if npm install -g @openchamber/web opencode-ai; then
+      date +%s > "${UPGRADE_STAMP}"
+    else
+      echo "[entrypoint] warning: auto-upgrade failed, continuing with installed versions"
+    fi
+  else
+    echo "[entrypoint] auto-upgrade skipped (last upgrade less than 24 h ago)"
+  fi
+fi
+
 echo "[entrypoint] starting openchamber on port 5000..."
 
 if [ "$#" -gt 0 ]; then
